@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 from .config import TEMPER, SAUCE_CAPS, SAUCE_CORE_CAPS, SAUCE_MAX_THREADS, BS_CAPS, BS_MAX_THREADS, BS_KEY, BS_USER, LOCAL_URL, REMOTE_URL
@@ -11,6 +12,8 @@ import base64
 import json
 import traceback
 import sys
+
+import urllib.parse
 
 from selenium import webdriver
 from appium import webdriver as appium_webdriver
@@ -205,7 +208,8 @@ class AbstractTest(object):
 
     def load_toc(self, my_temper=None):
         my_temper = my_temper or TEMPER  # This is used at startup, which can be sluggish on iPhone.
-        self.driver.get(self.base_url + "/texts")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/texts"))
+        # self.driver.get(self.base_url + "/texts")
         WebDriverWait(self.driver, my_temper).until(element_to_be_clickable((By.CSS_SELECTOR, ".readerNavCategory")))
         self.set_modal_cookie()
         return self
@@ -865,12 +869,19 @@ class AbstractTest(object):
         if isinstance(ref, str):
             ref = Ref(ref)
         assert isinstance(ref, Ref)
-        url = self.base_url + "/" + ref.url()
+        url = urllib.parse.urljoin(self.base_url, ref.url())
+        print(self.driver.current_url)
+
+        #url = self.base_url + "/" + ref.url()
         if filter is not None:
             url += "&with={}".format(filter)
         if lang is not None:
             url += "&lang={}".format(lang)
+
+        print(self.driver.current_url)
+        
         self.driver.get(url.replace("&", "?", 1))
+        print(self.driver.current_url)
         if filter == "all":
             WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".categoryFilter")))
         elif filter is not None:

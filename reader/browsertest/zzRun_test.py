@@ -1,4 +1,4 @@
-__package__ = "reader.browsertest"
+# __package__ = "reader.browsertest"
 
 import django
 django.setup() # required to use sefaria.models
@@ -11,6 +11,13 @@ import structlog
 from reader.browsertest import basic_tests
 from reader.browsertest.framework import Trial
 from reader.browsertest.framework import elements
+
+
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.expected_conditions import title_contains, presence_of_element_located, staleness_of,\
+        element_to_be_clickable, visibility_of_element_located, invisibility_of_element_located, \
+    text_to_be_present_in_element, _find_element, StaleElementReferenceException, visibility_of_any_elements_located
 
 
 
@@ -92,13 +99,13 @@ def setup():
     logger.info("Testing connectivity of the target server")
     applicationUrl = os.environ['APPLICATION_HOSTNAME'] # maybe add trailing slash if missing
     driver.get(applicationUrl)
-    print("Current URL: {}".format(driver.current_url))
-    print("Current title: {}".format(driver.title))
+    logger.info("Current URL: {}".format(driver.current_url))
+    logger.info("Current title: {}".format(driver.title))
 
     assert driver.current_url == applicationUrl
     assert driver.title == "Sefaria: a Living Library of Jewish Texts Online"
 
-    print("Preliminary tests finished")
+    logger.info("Preliminary tests finished")
     return driver
 
 def run_single_test(driver, testName,):
@@ -137,6 +144,20 @@ def testsAgainstDriver(driver, tests=[], target="http://localhost:80"):
     
     return results
 
+# def load_toc(self, my_temper=None):
+#     my_temper = my_temper or TEMPER  # This is used at startup, which can be sluggish on iPhone.
+#     self.driver.get(self.base_url + "/texts")
+#     WebDriverWait(self.driver, 30).until(element_to_be_clickable((By.CSS_SELECTOR, ".readerNavCategory")))
+#     self.set_modal_cookie()
+#     return self
+
+def load_toc(driver, wait):
+    driver.get("https://vecino.cauldron.sefaria.org/texts")
+    logger.info("Starting wait")
+    WebDriverWait(driver, wait).until(element_to_be_clickable((By.CSS_SELECTOR, ".readerNavCategory")))
+    logger.info("Ending wait")
+
+
 if __name__ == "__main__":
     """
     Script entrypoint
@@ -145,8 +166,8 @@ if __name__ == "__main__":
     SELENIUM_SERVER_URL="http://localhost:4444/wd/hub" APPLICATION_HOSTNAME="https://vecino.cauldron.sefaria.org/" python3 ./run_test.py
     """
     driver = setup()
-
-    results = testsAgainstDriver(driver, getPageLoadSuite(), "https://vecino.cauldron.sefaria.org/")
+    targetAppUrl = os.environ['APPLICATION_HOSTNAME']
+    results = testsAgainstDriver(driver, getPageLoadSuite(), targetAppUrl)
     
     for result in results:
         print(result.word_status())
