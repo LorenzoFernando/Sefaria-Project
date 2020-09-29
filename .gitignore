@@ -63,7 +63,7 @@ node_modules
 
 # Sefaria Local Settings files #
 ################################
-/sefaria/local_settings.py
+# /sefaria/local_settings.py
 
 # Site specific templates and urls #
 ####################################
@@ -126,3 +126,7 @@ static/sheetrank.json
 # Miscellaneous #
 #################
 /dafChat/deploy/dafchat/valuesGeneration/_generatedHelmValues.yaml
+
+# Secrets #
+###########
+/.secrets
