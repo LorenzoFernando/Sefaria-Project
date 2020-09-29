@@ -12,6 +12,7 @@ elasticsearch
 elasticsearch_dsl
 regex
 pytest
+pytest-parallel
 mailchimp
 redis
 django-redis==4.11.*

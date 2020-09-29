@@ -123,7 +123,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MONGO_HOST = "localhost"
 MONGO_PORT = 27017
 # Name of the MongoDB database to use.
-SEFARIA_DB = 'sefaria-vecino'
+SEFARIA_DB = 'sefaria-4052196'
 # Leave user and password blank if not using Mongo Auth
 SEFARIA_DB_USER = ''
 SEFARIA_DB_PASSWORD = ''

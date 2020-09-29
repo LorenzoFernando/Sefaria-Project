@@ -5,19 +5,17 @@ from datetime import timedelta
 relative_to_abs_path = lambda *x: os.path.join(os.path.dirname(
                                os.path.realpath(__file__)), *x)
 
-import structlog
-
 # These are things you need to change!
 
 ################ YOU ONLY NEED TO CHANGE "NAME" TO THE PATH OF YOUR SQLITE DATA FILE (If the db.sqlite file does not exist, simply create it) ########################################
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sefaria_auth',
-        'USER': 'sefaria',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '/path/to/your/sefaria/data/db.sqlite', # Or path to database file if using sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
@@ -123,7 +121,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MONGO_HOST = "localhost"
 MONGO_PORT = 27017
 # Name of the MongoDB database to use.
-SEFARIA_DB = 'sefaria-vecino'
+SEFARIA_DB = 'sefaria'
 # Leave user and password blank if not using Mongo Auth
 SEFARIA_DB_USER = ''
 SEFARIA_DB_PASSWORD = ''
@@ -238,46 +236,88 @@ logger.debug()
 if you are logging to a file, make sure the directory exists and is writeable by the server.
 """
 
-
 LOGGING = {
-    "version": 1, 
-    "disable_existing_loggers": True,
-    "formatters": {
-        "json_formatter": {
-            "()": structlog.stdlib.ProcessorFormatter,
-            "processor": structlog.processors.JSONRenderer(),
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s - %(levelname)s %(name)s: %(message)s'
         },
-    },
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "json_formatter",
+        'simple': {
+            'format': '%(levelname)s %(message)s'
         },
+        'verbose': {
+            'format': '%(asctime)s - %(levelname)s: [%(name)s] %(process)d %(thread)d %(message)s'
+        },
+
     },
-    "loggers": {
-        '': {
-            'handlers': ['console',],
-            'level': 'INFO',
-            'propagate': True 
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue'
         }
+    },
+    'handlers': {
+        'default': {
+            'level':'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': relative_to_abs_path('../log/sefaria.log'),
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
+            'formatter':'standard',
+        },
+        'custom_debug' :{
+            'level':'DEBUG',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': relative_to_abs_path('../log/debug.log'),
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 5,
+            'formatter':'verbose',
+            'filters': ['require_debug_true'],
+        },
+        'console':{
+            'level':'INFO',
+            'class':'logging.StreamHandler',
+            'formatter': 'simple',
+            'filters': ['require_debug_true'],
+        },
+
+        'null': {
+            'level':'INFO',
+            'class':'logging.NullHandler',
+        },
+
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        },
+        'request_handler': {
+            'level':'INFO',
+            'class':'logging.handlers.RotatingFileHandler',
+            'filename': relative_to_abs_path('../log/django_request.log'),
+            'maxBytes': 1024*1024*5, # 5 MB
+            'backupCount': 20,
+            'formatter':'standard',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['default', 'console', 'custom_debug'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'django': {
+            'handlers': ['null'],
+            'propagate': False,
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['mail_admins', 'request_handler'],
+            'level': 'INFO',
+            'propagate': True,
+        },
     }
 }
-
-structlog.configure(
-    processors=[
-        structlog.stdlib.filter_by_level,
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.stdlib.add_logger_name,
-        structlog.stdlib.add_log_level,
-        structlog.stdlib.PositionalArgumentsFormatter(),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.UnicodeDecoder(),
-        structlog.processors.ExceptionPrettyPrinter(),
-        structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
-    ],
-    context_class=structlog.threadlocal.wrap_dict(dict),
-    logger_factory=structlog.stdlib.LoggerFactory(),
-    wrapper_class=structlog.stdlib.BoundLogger,
-    cache_logger_on_first_use=True,
-)
