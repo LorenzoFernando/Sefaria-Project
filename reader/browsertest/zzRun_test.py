@@ -137,10 +137,16 @@ def testsAgainstDriver(driver, tests=[], target="http://localhost:80"):
     # https://www.selenium.dev/documentation/en/guidelines_and_recommendations/fresh_browser_per_test/
     results = []
     for test in tests:
+        driver.delete_all_cookies()
+        #print(driver.get_cookies())
         t = test(driver, target, {'browser': 'Firefox'})
         result = t.run()
 
         results.append(result)
+        print("TEST COMPLETE")
+
+
+        #driver.delete_cookie("_ga")
     
     return results
 
@@ -173,6 +179,8 @@ if __name__ == "__main__":
         print(result.word_status())
 
     exit(0)
+    print(driver.get_cookies())
+    driver.quit()
 
 
 

@@ -84,11 +84,11 @@ class AbstractTest(object):
     # Methods that begin with "load_" start with a page load.
 
     def set_modal_cookie(self):
-        # set cookie to avoid popup interruption
-        # We now longer set the welcomeToS2LoggedOut message by default.
-        # TODO is this method still needed?
-        pass
-        # self.driver.add_cookie({"name": "welcomeToS2LoggedOut", "value": "true"})
+        # # set cookie to avoid popup interruption
+        # # We now longer set the welcomeToS2LoggedOut message by default.
+        # # TODO is this method still needed? YES
+        # pass
+        self.driver.add_cookie({"name": "welcomeToS2LoggedOut", "value": "true"})
 
     def set_cookies_cookie(self):
         # set cookie to avoid popup interruption
@@ -119,14 +119,20 @@ class AbstractTest(object):
         if self.is_logged_in():
             return self
         self.nav_to_login()
-        elem = self.driver.find_element_by_css_selector("#id_email")
-        elem.send_keys(user)
-        elem = self.driver.find_element_by_css_selector("#id_password")
-        elem.send_keys(password)
-        self.driver.find_element_by_css_selector("button").click()
-        WebDriverWait(self.driver, TEMPER).until_not(title_contains("Log in"))
-        time.sleep(3)    # Takes some time to reload, and not sure what next page is
-        return self
+        try: 
+            elem = self.driver.find_element_by_css_selector("#id_email")
+            elem.send_keys(user)
+            elem = self.driver.find_element_by_css_selector("#id_password")
+            elem.send_keys(password)
+            self.driver.find_element_by_css_selector("button").click()
+            WebDriverWait(self.driver, TEMPER).until_not(title_contains("Log in"))
+            time.sleep(3)    # Takes some time to reload, and not sure what next page is
+            return self
+        except Exception as e:
+            print(e)
+            return self
+        finally:
+            return self
 
     def nav_to_account(self):
         if self.is_logged_in():
@@ -167,7 +173,7 @@ class AbstractTest(object):
         It tries a few differnt things to get out of the current state, back to a dependable base toc.
         :return:
         """
-        if self.driver.current_url == self.base_url + "/texts" or self.driver.current_url.startswith(self.base_url + "/texts?"):
+        if self.driver.current_url == urllib.parse.urljoin(self.base_url, "/texts") or self.driver.current_url.startswith(urllib.parse.urljoin(self.base_url,"/texts?")):
             return self
 
         # If text options are open, close them
@@ -209,7 +215,6 @@ class AbstractTest(object):
     def load_toc(self, my_temper=None):
         my_temper = my_temper or TEMPER  # This is used at startup, which can be sluggish on iPhone.
         self.driver.get(urllib.parse.urljoin(self.base_url, "/texts"))
-        # self.driver.get(self.base_url + "/texts")
         WebDriverWait(self.driver, my_temper).until(element_to_be_clickable((By.CSS_SELECTOR, ".readerNavCategory")))
         self.set_modal_cookie()
         return self
@@ -872,7 +877,6 @@ class AbstractTest(object):
         url = urllib.parse.urljoin(self.base_url, ref.url())
         print(self.driver.current_url)
 
-        #url = self.base_url + "/" + ref.url()
         if filter is not None:
             url += "&with={}".format(filter)
         if lang is not None:
@@ -911,7 +915,7 @@ class AbstractTest(object):
         if isinstance(ref, str):
             ref = Ref(ref)
         assert isinstance(ref, Ref)
-        url = self.base_url + "/" + ref.url()
+        url = urllib.parse.urljoin(self.base_url, ref.url()) # is the '/' needed
         self.driver.get(url)
         WebDriverWait(self.driver, TEMPER).until(
             element_to_be_clickable((By.CSS_SELECTOR, ".tocContent > :not(.loadingMessage)")))
@@ -1015,7 +1019,7 @@ class AbstractTest(object):
 
     def scroll_reader_panel_to_top(self):
         """Scrolls the first text panel to the top"""
-        # todo
+        # todoff
         return self
 
     def scroll_content_to_position(self, pixels):
@@ -1072,7 +1076,7 @@ class AbstractTest(object):
 
     # Search
     def load_search_url(self, query=None):
-        url = self.base_url + "/search"
+        url = urllib.parse.urljoin(self.base_url, "/search")
         if query is not None:
             url += "?q={}".format(query)
         self.driver.get(url)
@@ -1098,18 +1102,18 @@ class AbstractTest(object):
         return self
 
     def load_topics(self):
-        self.driver.get(self.base_url + "/topics")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/topics"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".topicList")))
         self.set_modal_cookie()
         return self
 
     def load_topic_page(self, slug):
-        self.driver.get(self.base_url + "/topics/" + slug)
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/topics/", slug))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".storyTitle")))
         return self
 
     def load_gardens(self):
-        self.driver.get(self.base_url + "/garden/jerusalem")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/garden/jerusalem"))
         WebDriverWait(self.driver, TEMPER).until(
             element_to_be_clickable((By.CSS_SELECTOR, "#filter-1 g.row")))  # individual filter row
         WebDriverWait(self.driver, TEMPER).until(
@@ -1117,36 +1121,36 @@ class AbstractTest(object):
         return self
 
     def load_home(self):
-        self.driver.get(self.base_url + "/?home")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/?home"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".header")))
         return self
 
     def load_people(self):
-        self.driver.get(self.base_url + "/people")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/people"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".author")))
 
-        self.driver.get(self.base_url + "/person/Meir%20Abulafia")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/person/Meir%20Abulafia"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, "#place-map")))
         return self
 
     def load_account(self):
-        self.driver.get(self.base_url + "/account")
-        WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".accountPanel .blockLink")))
+        # self.driver.get(urllib.parse.urljoin(self.base_url, "/account"))
+        # WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".accountPanel .blockLink")))
         return self
 
     def load_notifications(self):
-        self.driver.get(self.base_url + "/notifications")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/notifications"))
         WebDriverWait(self.driver, TEMPER).until(
             element_to_be_clickable((By.CSS_SELECTOR, ".notificationsList > .notification")))
         return self
 
     def load_private_sheets(self):
-        self.driver.get(self.base_url + "/sheets/private")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/sheets/private"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".sheet")))
         return self
 
     def load_private_groups(self):
-        self.driver.get(self.base_url + "/my/groups")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/my/groups"))
         WebDriverWait(self.driver, TEMPER).until(presence_of_element_located((By.CSS_SELECTOR, ".groupsList")))
         return self
 
@@ -1155,16 +1159,25 @@ class AbstractTest(object):
         if isinstance(ref, str):
             ref = Ref(ref)
         assert isinstance(ref, Ref)
-        url = self.base_url + "/translate/" + ref.url()
+        url = urllib.parse.urljoin(self.base_url, "/translate/")
+        url = urllib.parse.urljoin(url, ref.url())
+        print(url)
         self.driver.get(url)
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, "#newVersion")))
+        # WebDriverWait(driver, 15).until(element_to_be_clickable((By.CSS_SELECTOR, "#newVersion")))
         return self
 
     def load_edit(self, ref, lang, version):
         if isinstance(ref, str):
             ref = Ref(ref)
         assert isinstance(ref, Ref)
-        url = self.base_url + "/edit/" + ref.url() + "/" + lang + "/" + version.replace(" ", "_")
+        # url = urllib.parse.urljoin(self.base_url, "/edit/", ref.url(), "/", lang, "/", version.replace(" ", "_"))
+
+        url = urllib.parse.urljoin(self.base_url, "/edit/")
+        url = urllib.parse.urljoin(url, ref.url())
+        url = urllib.parse.urljoin(url, lang)
+        url = urllib.parse.urljoin(url, version.replace(" ", "_"))
+
         self.driver.get(url)
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, "#newVersion")))
         return self
@@ -1173,19 +1186,20 @@ class AbstractTest(object):
         if isinstance(ref, str):
             ref = Ref(ref)
         assert isinstance(ref, Ref)
-        url = self.base_url + "/add/" + ref.url()
+        url = urllib.parse.urljoin(self.base_url, "/add/")
+        url = urllib.parse.urljoin(url, ref.url())
         self.driver.get(url)
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, "#newVersion")))
         return self
 
     # Editor
     def new_sheet_in_editor(self):
-        self.driver.get(self.base_url + "/sheets/new?editor=0")
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/sheets/new?editor=0"))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".sheetContent")))
         return self
 
     def load_existing_sheet(self, sheetID):
-        self.driver.get(self.base_url + "/sheets/"+sheetID)
+        self.driver.get(urllib.parse.urljoin(self.base_url,  "/sheets/", sheetID))
         WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".sheetContent")))
         return self
 
