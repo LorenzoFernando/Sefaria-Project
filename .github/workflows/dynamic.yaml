@@ -97,6 +97,8 @@ jobs:
       - uses: actions/setup-python@v1
         with: 
           python-version: '3.7'    
+      - run: ls -l
+      - run: ls -l /github/workspaces/
           
       # - run: pip3 install django==1.11.* structlog
       - run: pip3 install -r /github/workspace/requirements.txt
