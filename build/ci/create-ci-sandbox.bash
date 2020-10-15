@@ -105,7 +105,7 @@ resourceAllocation="small"
 # Create Cloud Builder variables
 substVars=()
 substVars+=("_RESOURCE_ALLOCATION=$resourceAllocation")
-substVars+=("_ENV_NAME=$sandboxName")
+substVars+=("_ENV_NAME=$gitCommit")
 substVars+=("_GIT_COMMIT=$gitCommit")
 substVars+=("_GIT_REPO=$gitRepoName")
 substVars+=("_GKE_CLUSTER=$gkeCluster")
