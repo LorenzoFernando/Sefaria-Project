@@ -20,7 +20,7 @@ gkeRegion=${GKE_REGION:?Set GKE_REGION and re-run.}
 mongoHostName=${MONGO_HOST:?Set MONGO_HOST and re-run.}
 sandboxSubdomain=${SANDBOX_SUBDOMAIN:?Set SANDBOX_SUBDOMAIN and re-run.}
 #sanboxName=${SANDBOX_NAME:?Set SANDBOX_NAME and re-run.}
-#gitCommit=${GIT_COMMIT:?Set GIT_COMMIT and re-run.}
+gitCommit=${GIT_COMMIT:?Set GIT_COMMIT and re-run.}
 gkeNamespace=${GKE_NAMESPACE:?Set GKE_NAMESPACE and re-run.}
 postgresHostName=${POSTGRES_HOST:?Set POSTGRES_HOST and re-run.}
 gitRepoName=${GIT_REPO:-'Sefaria/Sefaria-Project'}
@@ -28,13 +28,6 @@ gitRepoName=${GIT_REPO:-'Sefaria/Sefaria-Project'}
 mongoLoad="true"
 isSandbox="true"
 resourceAllocation="small"
-
-GITHUB_SHA="4052196"
-sandboxName=$GITHUB_SHA
-gitCommit=$GITHUB_SHA
-
-
-GITHUB_SHA=4052196
 
 # TODO: 
 # 1. Specify the k8s-admin branch  (if I want this to run without context)
