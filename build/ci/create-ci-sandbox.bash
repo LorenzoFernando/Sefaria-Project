@@ -142,4 +142,5 @@ ls -l
 gcloud builds submit --no-source --config ./build/ci/ci-sandbox.yaml \
   --substitutions $substStr \
   --project $gcpProject \
-  --verbosity debug 
+  --verbosity debug \
+  --async
