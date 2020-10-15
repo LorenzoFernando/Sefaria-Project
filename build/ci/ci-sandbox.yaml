@@ -53,6 +53,7 @@ steps:
   #
   # TODO: Use the Kaniko builder to take advantage of shared build caches across builds
   # TODO: Use SHORT_SHA for image tags after a trigger for sandboxes is created (That variable is only available for triggered builds)
+  # TODO: consider renaming image container
   - name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "gcr.io/${PROJECT_ID}/sefaria-web-${_ENV_NAME}:gha-${_ENV_NAME}","-f", "build/web/Dockerfile", "."] 
     dir: Sefaria-Project
@@ -68,7 +69,7 @@ steps:
       - sefaria_repo_clone
 
   - name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/sefaria-asset-${_ENV_NAME}:gha-${_ENV_NAME}", "-f", "build/nginx/Dockerfile", "--build-arg", "SRC_IMG=gcr.io/${PROJECT_ID}/sefaria-web-sandbox:gha-${_ENV_NAME}", "."]
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/sefaria-asset-${_ENV_NAME}:gha-${_ENV_NAME}", "-f", "build/nginx/Dockerfile", "--build-arg", "SRC_IMG=gcr.io/${PROJECT_ID}/sefaria-web-${_ENV_NAME}:gha-${_ENV_NAME}", "."]
     dir: Sefaria-Project
     id: nginx_container
     wait_for:
