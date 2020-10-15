@@ -64,7 +64,7 @@ jobs:
       - name: Wait for test sandbox to become available 
         # https://gist.github.com/rgl/f90ff293d56dbb0a1e0f7e7e89a81f42
         # Add a timeout
-        run: timeout 900 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://4052196.cauldron.sefaria.org/texts)" != "200" ]]; do sleep 5; done'
+        run: timeout 900 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' https://$GITHUB_SHA.cauldron.sefaria.org/texts)" != "200" ]]; do sleep 5; done'
 
   # make sure Cloudbuild runs without error
   
