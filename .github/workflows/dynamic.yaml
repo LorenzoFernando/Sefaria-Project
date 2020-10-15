@@ -53,7 +53,7 @@ jobs:
           GKE_REGION: "${{secrets.DEV_GKE_REGION}}"
           MONGO_HOST: "${{secrets.DEV_MONGO_HOST}}"
           POSTGRES_HOST: "${{secrets.DEV_POSTGRES_HOST}}"
-          SANDBOX_NAME: ${{GITHUB_SHA}}
+          SANDBOX_NAME: "$GITHUB_SHA"
           SANDBOX_SUBDOMAIN: "${{secrets.DEV_SANDBOX_SUBDOMAIN}}"
           GCP_PROJECT: "${{secrets.DEV_GCP_PROJECT}}"
      
