@@ -81,7 +81,7 @@ jobs:
       - name: Auth to target cluster
         run: gcloud container clusters get-credentials ${{secrets.DEV_GKE_CLUSTER}} --zone ${{secrets.DEV_GKE_REGION}} --project ${{secrets.DEV_GCP_PROJECT}}
           
-      - run: kubectl exec -it $(kubectl get pod --selector=stackRole=django,deployEnv=4052196 -o jsonpath='{range .items[0]}{.metadata.name}{end}') -- py.test -m "not deep and not failing"
+      - run: kubectl exec $(kubectl get pod --selector=stackRole=django,deployEnv=4052196 -o jsonpath='{range .items[0]}{.metadata.name}{end}') -- py.test -m "not deep and not failing"
 
 
   selenium-sauce:
