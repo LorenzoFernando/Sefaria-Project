@@ -23,7 +23,7 @@ sandboxSubdomain=${SANDBOX_SUBDOMAIN:?Set SANDBOX_SUBDOMAIN and re-run.}
 gitCommit=${GITHUB_SHA:?Set GITHUB_SHA and re-run.}
 gkeNamespace=${GKE_NAMESPACE:?Set GKE_NAMESPACE and re-run.}
 postgresHostName=${POSTGRES_HOST:?Set POSTGRES_HOST and re-run.}
-gitRepoName=${GIT_REPO:-'Sefaria/Sefaria-Project'}
+gitRepoName=${GITHUB_REPOSITORY:-'Sefaria/Sefaria-Project'}
 
 mongoLoad="true"
 isSandbox="true"
@@ -105,7 +105,7 @@ resourceAllocation="small"
 # Create Cloud Builder variables
 substVars=()
 substVars+=("_RESOURCE_ALLOCATION=$resourceAllocation")
-substVars+=("_ENV_NAME=$gitCommit")
+substVars+=("_ENV_NAME=${gitCommit")
 substVars+=("_GIT_COMMIT=$gitCommit")
 substVars+=("_GIT_REPO=$gitRepoName")
 substVars+=("_GKE_CLUSTER=$gkeCluster")
