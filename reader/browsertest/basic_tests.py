@@ -133,8 +133,17 @@ class PagesLoad(AtomicTest):
         print("Done loading people ")
         #logged in stuff
         self.login_user()
+        
         self.load_my_profile()
         # self.load_notifications()
+        print("Done loading user")
+        # self.load_notifications()
+        self.load_account() # might be superceded by load_my_profile
+        print("Done loading account")
+        self.load_private_sheets()
+        print("Done loading private sheets")
+        self.load_private_groups()
+        print("Done loading private groups")
 
 class SectionContentAsExpectedMasechtotAndChapters(AtomicTest):
     suite_class = PageloadSuite

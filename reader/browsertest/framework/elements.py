@@ -1122,6 +1122,16 @@ class AbstractTest(object):
         WebDriverWait(self.driver, TEMPER).until(presence_of_element_located((By.CSS_SELECTOR, ".groupsList")))
         return self
 
+    def load_private_sheets(self):
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/sheets/private"))
+        WebDriverWait(self.driver, TEMPER).until(element_to_be_clickable((By.CSS_SELECTOR, ".sheet")))
+        return self
+
+    def load_private_groups(self):
+        self.driver.get(urllib.parse.urljoin(self.base_url, "/my/groups"))
+        WebDriverWait(self.driver, TEMPER).until(presence_of_element_located((By.CSS_SELECTOR, ".groupsList")))
+        return self
+
     # Editing
     def load_translate(self, ref):
         if isinstance(ref, str):
