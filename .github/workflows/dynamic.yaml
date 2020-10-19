@@ -53,7 +53,7 @@ jobs:
           GKE_REGION: "${{secrets.DEV_GKE_REGION}}"
           MONGO_HOST: "${{secrets.DEV_MONGO_HOST}}"
           POSTGRES_HOST: "${{secrets.DEV_POSTGRES_HOST}}"
-          SANDBOX_NAME: "${GITHUB_SHA:0:6}"
+          SANDBOX_NAME: "${GITHUB_SHA}"
           SANDBOX_SUBDOMAIN: "${{secrets.DEV_SANDBOX_SUBDOMAIN}}"
           GCP_PROJECT: "${{secrets.DEV_GCP_PROJECT}}"
      
@@ -122,7 +122,7 @@ jobs:
           SEFARIA_TEST_PASS: ${{ secrets.SEFARIA_APP_PASS }}
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           SELENIUM_SERVER_URL: https://${{ secrets.SAUCE_USERNAME }}:${{ secrets.SAUCE_ACCESS_KEY }}@@ondemand.us-west-1.saucelabs.com:443/wd/hub
-          APPLICATION_HOSTNAME: https://${GITHUB_SHA:0:6}.cauldron.sefaria.org
+          APPLICATION_HOSTNAME: https://${GITHUB_SHA}.cauldron.sefaria.org
 
       # - run: python3 ./reader/browsertest/run_tests_on_travis.py 'Build -test'
       #   env: 
@@ -161,7 +161,7 @@ jobs:
         run: ./build/ci/destroy-ci-sandbox.bash
         env:
           GKE_CLUSTER: "${{secrets.DEV_GKE_CLUSTER}}"
-          SANDBOX_NAME: ${GITHUB_SHA:0:6}"
+          SANDBOX_NAME: $GITHUB_SHA"
           GCP_PROJECT: "${{secrets.DEV_GCP_PROJECT}}"
           GKE_REGION: "${{secrets.DEV_GKE_REGION}}"
           SANDBOX_SUBDOMAIN: "${{secrets.DEV_SANDBOX_SUBDOMAIN}}"
