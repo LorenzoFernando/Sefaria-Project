@@ -40,8 +40,8 @@ def ensureEnvVars():
         logger.info("Please set the SELENIUM_SERVER_HOSTNAME environment variable and rerun.")
         exit(1)
 
-    if 'APPLICATION_HOSTNAME' not in os.environ:
-        logger.info("Please set the APPLICATION_HOSTNAME environment variable and rerun.")
+    if ('APPLICATION_HOSTNAME' not in os.environ) and ('GITHUB_SHA' not in os.environ):
+        logger.info("Please set the APPLICATION_HOSTNAME or GITHUB_SHA environment variable and rerun.")
         exit(1)
     logger.info("The requird environment variables are present. Proceeding.")
 
