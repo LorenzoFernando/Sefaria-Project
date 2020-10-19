@@ -100,7 +100,16 @@ def setup():
 
     # get homepage and get title, and test
     logger.info("Testing connectivity of the target server")
-    applicationUrl = os.environ['APPLICATION_HOSTNAME'] # maybe add trailing slash if missing
+
+    # Generate the application URL from the gitsha if its available. 
+    # If it's not available, use APPLICATION_HOSTNAME
+
+    commitSha = os.getenv('GITHUB_SHA')
+    if commitSha is not None:
+        applicationUrl = "https://{}.cauldron.sefaria.org/".format(commitSha[:6])
+    else:
+        applicationUrl = os.environ['APPLICATION_HOSTNAME'] # maybe add trailing slash if missing
+    
     driver.get(applicationUrl)
     logger.info("Current URL: {}".format(driver.current_url))
     logger.info("Current title: {}".format(driver.title))

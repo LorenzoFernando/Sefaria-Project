@@ -122,7 +122,6 @@ jobs:
           SEFARIA_TEST_PASS: ${{ secrets.SEFARIA_APP_PASS }}
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           SELENIUM_SERVER_URL: https://${{ secrets.SAUCE_USERNAME }}:${{ secrets.SAUCE_ACCESS_KEY }}@@ondemand.us-west-1.saucelabs.com:443/wd/hub
-          APPLICATION_HOSTNAME: https://$GITHUB_SHA.cauldron.sefaria.org
 
       # - run: python3 ./reader/browsertest/run_tests_on_travis.py 'Build -test'
       #   env: 
