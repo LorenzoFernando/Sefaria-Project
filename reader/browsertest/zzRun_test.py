@@ -35,6 +35,16 @@ CAPABILITIES = [
 ]
 logger = structlog.get_logger()
 
+def getApplicationHostname():
+    if 'APPLICATION_HOSTNAME' in os.environ:
+        return os.environ['APPLICATION_HOSTNAME']
+    
+    elif 'GITHUB_SHA' in os.environ:
+        return "https://{}.cauldron.sefaria.org/".format(os.environ['GITHUB_SHA'][:6])
+    else:
+        logger.info("Please set the APPLICATION_HOSTNAME or GITHUB_SHA environment variable and rerun.")
+        exit(1)
+
 def ensureEnvVars():
     if 'SELENIUM_SERVER_URL' not in os.environ:
         logger.info("Please set the SELENIUM_SERVER_HOSTNAME environment variable and rerun.")
@@ -48,7 +58,7 @@ def ensureEnvVars():
 
 def ensureServerReachability():
     # Check reachability of named servers
-    for site in [os.environ['APPLICATION_HOSTNAME'], os.environ['SELENIUM_SERVER_URL']]:
+    for site in [getApplicationHostname(), os.environ['SELENIUM_SERVER_URL']]:
         resp = requests.get(site).status_code
         if resp > 399:
             logger.info("Site {} not reachable. Please make sure it is running and rerun this script".format(site))
@@ -104,11 +114,7 @@ def setup():
     # Generate the application URL from the gitsha if its available. 
     # If it's not available, use APPLICATION_HOSTNAME
 
-    commitSha = os.getenv('GITHUB_SHA')
-    if commitSha is not None:
-        applicationUrl = "https://{}.cauldron.sefaria.org/".format(commitSha[:6])
-    else:
-        applicationUrl = os.environ['APPLICATION_HOSTNAME'] # maybe add trailing slash if missing
+    applicationUrl = getApplicationHostname()
     
     driver.get(applicationUrl)
     logger.info("Current URL: {}".format(driver.current_url))
@@ -170,7 +176,8 @@ def testsAgainstDriver(driver, tests=[], target="http://localhost:80"):
 #     return self
 
 def load_toc(driver, wait):
-    driver.get("https://vecino.cauldron.sefaria.org/texts")
+    driver.get(urllib.parse.urljoin(getApplicationHostname(), "/texts"))
+    ## driver.get("https://vecino.cauldron.sefaria.org/texts")
     logger.info("Starting wait")
     WebDriverWait(driver, wait).until(element_to_be_clickable((By.CSS_SELECTOR, ".readerNavCategory")))
     logger.info("Ending wait")
@@ -184,7 +191,7 @@ if __name__ == "__main__":
     SELENIUM_SERVER_URL="http://localhost:4444/wd/hub" APPLICATION_HOSTNAME="https://vecino.cauldron.sefaria.org/" python3 ./run_test.py
     """
     driver = setup()
-    targetAppUrl = os.environ['APPLICATION_HOSTNAME']
+    targetAppUrl = getApplicationHostname()
     results = testsAgainstDriver(driver, getPageLoadSuite(), targetAppUrl)
     
     for result in results:
