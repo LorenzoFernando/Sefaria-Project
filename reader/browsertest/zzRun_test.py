@@ -15,6 +15,7 @@ from reader.browsertest import basic_tests
 from reader.browsertest.framework import Trial
 from reader.browsertest.framework import elements
 
+import urllib.parse
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
