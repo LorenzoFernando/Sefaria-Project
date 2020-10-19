@@ -176,17 +176,14 @@ if __name__ == "__main__":
     """
     driver = setup()
     targetAppUrl = os.environ['APPLICATION_HOSTNAME']
-    # results = testsAgainstDriver(driver, getPageLoadSuite(), targetAppUrl)
+    results = testsAgainstDriver(driver, getPageLoadSuite(), targetAppUrl)
     
-    # for result in results:
-    #     print(result.word_status())
+    for result in results:
+        print(result.word_status())
 
-    # exit(0)
-    # print(driver.get_cookies())
-    # driver.quit()
-
-    t = Trial(platform="travis", build=build, seleniumServerHostName=)
-
+    exit(0)
+    print(driver.get_cookies())
+    driver.quit()
 
 
 # from reader.browsertest import zzRun_test
