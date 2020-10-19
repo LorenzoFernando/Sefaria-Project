@@ -69,10 +69,21 @@ logger = logging.getLogger(__name__)
 # Initialized cache library objects that depend on sefaria.model being completely loaded.
 logger.warn("Initializing library objects.")
 library.get_toc_tree()
+logger.warn("Initializtion: done running get_toc_tree")
+
 library.build_full_auto_completer()
+logger.warn("Initializtion: done running build_full_auto_completer")
+
 library.build_ref_auto_completer()
+logger.warn("Initializtion: done running build_ref_auto_completer")
+
 library.build_lexicon_auto_completers()
+logger.warn("Initializtion: done running build_lexicon_auto_completer")
+
 library.build_cross_lexicon_auto_completer()
+logger.warn("Initializtion: done running build_cross_lexicon_completer")
+
+logger.warn("Done initializing library objects.")
 if server_coordinator:
     server_coordinator.connect()
 #    #    #
