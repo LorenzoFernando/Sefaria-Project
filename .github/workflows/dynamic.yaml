@@ -69,7 +69,7 @@ jobs:
         # Add a timeout
         run: ./build/ci/waitForSandbox.bash
         env:
-          WAIT_DURATION: "1500"
+          WAIT_DURATION: "3000"
 
   # make sure Cloudbuild runs without error
      
