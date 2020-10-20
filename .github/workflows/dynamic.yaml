@@ -144,7 +144,9 @@ jobs:
 
   sandbox-destroy:
     runs-on: ubuntu-latest
-    needs: sandbox-ready
+    needs: 
+      - sandbox-ready
+      - pytest
     steps: 
       # Deploy branch to cauldron
       - name: Checkout
