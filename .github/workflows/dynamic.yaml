@@ -61,6 +61,9 @@ jobs:
     needs: sandbox-deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+      uses: actions/checkout@v2
+
       - name: Wait for test sandbox to become available 
         # https://gist.github.com/rgl/f90ff293d56dbb0a1e0f7e7e89a81f42
         # Add a timeout
