@@ -59,7 +59,7 @@ def ensureEnvVars():
 
 def ensureServerReachability():
     # Check reachability of named servers
-    for site in [getApplicationHostname(), os.environ['SELENIUM_SERVER_URL']]:
+    for site in [getApplicationHostname()]:
         resp = requests.get(site).status_code
         if resp > 399:
             logger.info("Site {} not reachable. Please make sure it is running and rerun this script".format(site))
