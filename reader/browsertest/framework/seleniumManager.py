@@ -18,7 +18,7 @@ class SeleniumDriverManager(object):
       - Deal with passing in different capabilities
     """
 
-    def __init__(self, seleniumServerUrl="http://localhost:4444/wd/hub"):
+    def __init__(self, seleniumServerUrl="http://localhost:4444/wd/hub", capabilities=[]):
         #print("checking envvars")
         #self.ensureEnvVars() # Make sure the required envvars are available
         self.seleniumServerUrl = seleniumServerUrl
@@ -35,8 +35,8 @@ class SeleniumDriverManager(object):
         return
 
     # self -> driver
-    def createDriver(self):
-        return self.createFirefoxDriver(self.seleniumServerUrl)
+    def createDriver(self,):
+        return self.createFirefoxDriver(self.seleniumServerUrl,)
 
     def createFirefoxDriver(self, seleniumServerUrl="http://localhost:4444/wd/hub",):
         """
@@ -45,10 +45,18 @@ class SeleniumDriverManager(object):
         For now, doesn't require credentials. 
         This is a plain driver meant to target a selenium runner
         """
+
+        default_capabilities = {
+            'browserName': "firefox", 
+            'sefaria_mode': 'multi_panel', 
+            'sefaria_short_name': 'FF/Lin', 
+            "extendedDebugging": True
+            }
+
         logger.info("Creating Firefox driver...")
         fopt = webdriver.FirefoxOptions()
         fopt.add_argument('--headless')
-        return webdriver.Remote(command_executor=seleniumServerUrl, options=fopt)
+        return webdriver.Remote(command_executor=seleniumServerUrl, options=fopt, desired_capabilities=default_capabilities)
 
     def ensureDriverFunctionality(self, driver):
         """
@@ -65,3 +73,12 @@ class SeleniumDriverManager(object):
             exit(1)
         else: 
             logger.info("The driver successfullly made a web request. Proceeding.")
+
+    def getCapabilities(self):
+        default_capabilities = [{
+            'browserName': "firefox", 
+            'sefaria_mode': 'multi_panel', 
+            'sefaria_short_name': 'FF/Lin', 
+            "extendedDebugging": True
+            }]
+        return default_capabilities

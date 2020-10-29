@@ -28,6 +28,9 @@ from selenium.common.exceptions import NoSuchElementException, NoAlertPresentExc
 # http://selenium-python.readthedocs.io/waits.html
 # http://selenium-python.readthedocs.io/api.html#module-selenium.webdriver.support.expected_conditions
 
+from . import seleniumManager as sm
+
+
 import time # import stand library below name collision in sefaria.model
 
 
@@ -1574,13 +1577,19 @@ class Trial(object):
     default_local_driver = webdriver.Chrome
     # default_local_driver = webdriver.Firefox
     # default_local_driver = webdriver.Safari
-    def __init__(self, platform="local", build=None, tests=None, caps=None, parallel=None, verbose=False):
+    def __init__(self, platform="local", build=None, tests=None, caps=None, parallel=None, verbose=False, seleniumServerHostname="", targetApplicationUrl=""):
         """
         :param caps: If local: webdriver classes, if remote, dictionaries of capabilities
         :param platform: "sauce", "bstack", "local", "travis"
         :return:
+
+
+        BASE_URL refers to the target application
         """
-        assert platform in ["sauce", "bstack", "local", "travis"]
+
+
+
+        assert platform in ["sauce", "bstack", "local", "travis", "github"]
         if platform == "travis":
             global SAUCE_USERNAME, SAUCE_ACCESS_KEY
             SAUCE_USERNAME = os.getenv('SAUCE_USERNAME')
@@ -1599,17 +1608,25 @@ class Trial(object):
             self.is_local = False
             self.BASE_URL = LOCAL_URL
             self.caps = caps if caps else SAUCE_CORE_CAPS
+        elif platform == "github":
+            self.is_local = False
+            self.BASE_URL = targetApplicationUrl
+            self.caps = sm.SeleniumDriverManager.getCapabilities(None)
+            self.seleniumDriverManager = sm.SeleniumDriverManager(seleniumServerHostname)
+            self.parallel = False
         else:
             self.is_local = False
             self.BASE_URL = REMOTE_URL
             self.caps = caps if caps else BS_CAPS
+
+
         self.isVerbose = verbose
         self.platform = platform
         self.build = build
         self.tests = get_every_build_tests(get_suites()) if tests is None else tests
         self.seed = random.random()
         self._results = TestResultSet()
-        self.parallel = parallel if parallel is not None else False if self.is_local else True
+        #self.parallel = parallel if parallel is not None else False if self.is_local else True
         if self.parallel:
             self.thread_count = BS_MAX_THREADS if self.platform == "bstack" else SAUCE_MAX_THREADS
 
@@ -1640,6 +1657,9 @@ class Trial(object):
             driver = webdriver.Remote(
                 command_executor='http://{}:{}@hub.browserstack.com:80/wd/hub'.format(BS_USER, BS_KEY),
                 desired_capabilities=cap)
+        elif self.platform == "github":
+            assert cap is not None
+            driver = self.seleniumDriverManager.createDriver()
         else:
             raise Exception("Unrecognized platform: {}".format(self.platform))
 
@@ -1717,6 +1737,7 @@ class Trial(object):
             p = Pool(self.thread_count)
             l = len(caps)
             try:
+                print("[_test_on_all] current class {}".format(test_class))
                 tresults = p.map(_test_one_worker, list(zip([self] * l, [test_class] * l, caps)))
             except Exception:
                 msg = traceback.format_exc()
