@@ -195,6 +195,8 @@ if __name__ == "__main__":
     targetAppUrl = getApplicationHostname()
     results = testsAgainstDriver(driver, getPageLoadSuite(), targetAppUrl)
     
+    # todo: print the results in the way the normal test suite does it
+    
     for result in results:
         print(result.word_status())
 
