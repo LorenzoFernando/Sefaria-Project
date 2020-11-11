@@ -41,7 +41,8 @@ def getApplicationHostname():
         return os.environ['APPLICATION_HOSTNAME']
     
     elif 'GITHUB_SHA' in os.environ:
-        return "https://{}.cauldron.sefaria.org/".format(os.environ['GITHUB_SHA'][:6])
+        # return "https://{}.cauldron.sefaria.org/".format(os.environ['GITHUB_SHA'][:6])
+        return "https://{}.cauldron.sefaria.org/".format("f3e7a2")
     else:
         logger.info("Please set the APPLICATION_HOSTNAME or GITHUB_SHA environment variable and rerun.")
         exit(1)
