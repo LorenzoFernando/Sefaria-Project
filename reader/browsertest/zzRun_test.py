@@ -61,7 +61,7 @@ def ensureEnvVars():
 def ensureServerReachability():
     # Check reachability of named servers
     for site in [getApplicationHostname()]:
-        resp = requests.get(site).status_code
+        resp = requests.get(site, verify=False).status_code
         if resp > 399:
             logger.info("Site {} not reachable. Please make sure it is running and rerun this script".format(site))
             exit(1)
@@ -96,9 +96,16 @@ def createFirefoxDriver(seleniumServerUrl="http://localhost:4444/wd/hub",):
     For now, doesn't require credentials
     """
     logger.info("Creating Firefox driver...")
+    
+    # firefox options
     fopt = webdriver.FirefoxOptions()
     fopt.add_argument('--headless')
-    return webdriver.Remote(command_executor=seleniumServerUrl, options=fopt)
+
+    # firefox capabilities
+    fcap = webdriver.DesiredCapabilities().FIREFOX
+    fcap['acceptSslcerts'] = True
+
+    return webdriver.Remote(command_executor=seleniumServerUrl, options=fopt, desired_capabilities=fcap)
 
 def setup():
     ensureEnvVars()
