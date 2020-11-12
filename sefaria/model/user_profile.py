@@ -546,9 +546,12 @@ class UserProfile(object):
     def interrupting_message(self):
         """
         Returns the next message to interupt the user with, if any are queued up.
+
+
         """
-        messages = self.interrupting_messages
-        return messages[0] if len(messages) > 0 else None
+        return None
+        # messages = self.interrupting_messages
+        # return messages[0] if len(messages) > 0 else None
 
     def mark_interrupting_message_read(self, message):
         """

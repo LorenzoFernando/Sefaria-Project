@@ -6,12 +6,16 @@ django.setup()
 from .framework import Trial
 from . import basic_tests    # This is in fact needed - to register subclasses Trial, etc.
 import sys
+import os
 
 from .framework.seleniumManager import SeleniumDriverManager as sdm
-# t = Trial(platform="remote", build=None, verbose=True, seleniumServerHostname="https://seforenzo:f5d18673-f960-44fb-9a0c-6e3252ef246b@ondemand.us-west-1.saucelabs.com:443/wd/hub")
 
 
-t = Trial(platform="github", parallel=None, build=None, verbose=True, seleniumServerHostname="http://localhost:4444/wd/hub", targetApplicationUrl="https://vecino.cauldron.sefaria.org")
+# Get environment variables
+seleniumServerUrl = os.environ['SELENIUM_SERVER_URL']
+targetApplicationUrl = os.environ['APPLICATION_URL']
+
+t = Trial(platform="github", parallel=None, build=None, verbose=True, seleniumServerHostname=seleniumServerUrl, targetApplicationUrl="https://vecino.cauldron.sefaria.org")
 t.run()
 
 print("DONE RUNNING TESTS")
