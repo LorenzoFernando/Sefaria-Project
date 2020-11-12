@@ -553,17 +553,18 @@ class MessageModal extends Component {
   makeVisible() { this.setState({ visible: true }); }
   onCancel(e) { this.setState({ visible: false }); }
   render() {
-    if (!this.state.visible) { return null; }
-    return (
-      <div id="interruptingMessageBox" className="sefariaModalBox">
-        <div id="interruptingMessageOverlay" onClick={this.onCancel}></div>
-        <div id="interruptingMessage" className='message-modal' style={{display: 'block'}}>
-          <div className='messageHeader'>{ `${Sefaria._("Send a message to ")}${this.props.name}` }</div>
-          <textarea value={this.state.message} onChange={this.onChange} />
-          <div className='sendMessage button' onClick={this.onSend}>{ Sefaria._("Send") }</div>
-          <div className='cancel button white' onClick={this.onCancel}>{ Sefaria._("Cancel") }</div>
-        </div>
-      </div>
+    return null;
+    // if (!this.state.visible) { return null; }
+    // return (
+    //   <div id="interruptingMessageBox" className="sefariaModalBox">
+    //     <div id="interruptingMessageOverlay" onClick={this.onCancel}></div>
+    //     <div id="interruptingMessage" className='message-modal' style={{display: 'block'}}>
+    //       <div className='messageHeader'>{ `${Sefaria._("Send a message to ")}${this.props.name}` }</div>
+    //       <textarea value={this.state.message} onChange={this.onChange} />
+    //       <div className='sendMessage button' onClick={this.onSend}>{ Sefaria._("Send") }</div>
+    //       <div className='cancel button white' onClick={this.onCancel}>{ Sefaria._("Cancel") }</div>
+    //     </div>
+    //   </div>
     );
   }
 }
