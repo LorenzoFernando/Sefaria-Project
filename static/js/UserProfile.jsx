@@ -565,7 +565,7 @@ class MessageModal extends Component {
     //       <div className='cancel button white' onClick={this.onCancel}>{ Sefaria._("Cancel") }</div>
     //     </div>
     //   </div>
-    );
+    // );
   }
 }
 MessageModal.propTypes = {
