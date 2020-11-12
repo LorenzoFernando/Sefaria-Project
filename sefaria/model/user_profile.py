@@ -549,11 +549,12 @@ class UserProfile(object):
 
 
         """
-        if NO_INTERRUPTING_MESSAGES:
-            return None
-        else:
-            messages = self.interrupting_messages
-            return messages[0] if len(messages) > 0 else None
+        return None
+        # if NO_INTERRUPTING_MESSAGES:
+        #     return None
+        # else:
+        #     messages = self.interrupting_messages
+        #     return messages[0] if len(messages) > 0 else None
 
     def mark_interrupting_message_read(self, message):
         """

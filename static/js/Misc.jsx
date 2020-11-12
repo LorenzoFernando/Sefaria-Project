@@ -1627,15 +1627,16 @@ class InterruptingMessage extends Component {
               </div>;
 
     } else if (this.props.style === "modal") {
-      return  <div id="interruptingMessageBox" className={this.state.animationStarted ? "" : "hidden"}>
-          <div id="interruptingMessageOverlay"></div>
-          <div id="interruptingMessage">
-            <div id="interruptingMessageContentBox">
-              <div id="interruptingMessageClose" onClick={this.close}>×</div>
-              <div id="interruptingMessageContent" dangerouslySetInnerHTML={ {__html: this.props.messageHTML} }></div>
-            </div>
-          </div>
-        </div>;
+      return null;
+      // return  <div id="interruptingMessageBox" className={this.state.animationStarted ? "" : "hidden"}>
+      //     <div id="interruptingMessageOverlay"></div>
+      //     <div id="interruptingMessage">
+      //       <div id="interruptingMessageContentBox">
+      //         <div id="interruptingMessageClose" onClick={this.close}>×</div>
+      //         <div id="interruptingMessageContent" dangerouslySetInnerHTML={ {__html: this.props.messageHTML} }></div>
+      //       </div>
+      //     </div>
+      //   </div>;
     }
     return null;
   }
