@@ -134,7 +134,7 @@ jobs:
       #     DJANGO_SETTINGS_MODULE: sefaria.settings
 
 
-  selenium-sauce-f3e7a2:
+  selenium-sauce-arbitrary:
     # This can safely use ''
     runs-on: ubuntu-latest
     steps:
@@ -164,7 +164,7 @@ jobs:
 
       - run: python3 ./reader/browsertest/zzRun_test.py
         env: 
-          GITHUB_SHA: "f3e7a2"
+          GITHUB_SHA: "7a9ba9"
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           PYTHONPATH: "."
@@ -212,7 +212,6 @@ jobs:
 
       - run: python3 ./reader/browsertest/zzRun_test.py
         env: 
-          GITHUB_SHA: "f3e7a2"
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
           PYTHONPATH: "."
