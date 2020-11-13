@@ -6,6 +6,12 @@
 import django
 django.setup() # required to use sefaria.models
 
+from sefaria.model import *
+
+#
+from sefaria.system.database import db
+print(db)
+
 from selenium import webdriver
 import os
 import requests

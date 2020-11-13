@@ -123,7 +123,11 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 MONGO_HOST = "localhost"
 MONGO_PORT = 27017
 # Name of the MongoDB database to use.
-SEFARIA_DB = 'sefaria-4052196'
+if 'GITHUB_SHA' in os.environ:
+    SEFARIA_DB = "sefaria-{}".format(os.environ['GITHUB_SHA'][:6])
+else:
+    SEFARIA_DB = "sefaria"
+
 # Leave user and password blank if not using Mongo Auth
 SEFARIA_DB_USER = ''
 SEFARIA_DB_PASSWORD = ''
