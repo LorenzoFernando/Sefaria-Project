@@ -50,7 +50,6 @@ jobs:
 
   jest-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -59,8 +58,15 @@ jobs:
           npm install
           npm run build-prod
       - name: Run Jest Tests
-        run: npm run jest-travis
-      - name: Print JSON test result
+        run: |
+          npm run jest-travis
+          cat ./jestResults.json
+
+  handle-results-jest:
+    needs: jest-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print Jest Test Results
         run: cat ./jestResults.json
 
   sandbox-deploy:
