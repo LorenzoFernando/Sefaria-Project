@@ -61,23 +61,12 @@ jobs:
       - run: pwd
       - name: Run Jest Tests
         run: npm run jest-travis
-        # continue-on-error: true # for troubleshooting
-      - run: cat /home/runner/jestResults.json
-        if: ${{ always() }}
-
-  handle-results-jest:
-    needs: jest-tests
-    if: ${{ always() }}    
-    runs-on: ubuntu-latest
-    steps:
-      - run: ls /home/runner
-      - run: pwd
-      - name: Print Jest Test Results
+      - name: Handle Jest Test Results # later, upload
         run: cat /home/runner/jestResults.json
+        if: ${{ always() }}
 
   sandbox-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -443,7 +432,10 @@ jobs:
         run: echo "PYTEST_POD_NAME=$(kubectl get pods --selector=app=web-${{env.GITHUB_SHA_SHORT}} -o json | jq -r '.items[0].metadata.name')" >> $GITHUB_ENV
       
       - name: Run PyTest
-        run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pytest -v -m "not deep and not failing"'
+        run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pytest -v -m "not deep and not failing"' | tee /home/runner/pytestResults.txt
+
+      - name: Handle PyTest output
+        run: cat /home/runner/pytestResults.txt # later, upload
 
   sandbox-cleanup:
     name: "Clean up CI Sandbox"
