@@ -72,7 +72,7 @@ jobs:
     if: ${{ always() }}    
     runs-on: ubuntu-latest
     steps:
-      - run: ls
+      - run: ls /home/runner
       - run: pwd
       - name: Print Jest Test Results
         run: cat /home/runner/jestResults.json
