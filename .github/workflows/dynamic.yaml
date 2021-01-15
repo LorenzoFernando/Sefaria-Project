@@ -1,10 +1,9 @@
 ---
-name: Selenium Tests
+name: Tests
 on:
   - push
 
 jobs:
-
   starting-notification:
     runs-on: ubuntu-latest
     steps:
