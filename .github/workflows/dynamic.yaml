@@ -51,7 +51,6 @@ jobs:
   jest-tests:
     runs-on: ubuntu-latest
     steps:
-      - run: echo $HOME
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Install dependencies
@@ -62,10 +61,10 @@ jobs:
       - run: pwd
       - name: Run Jest Tests
         run: |
-          npm run jest-travis
-          cat /github/workspace/jestResults.json
+          jest --json --outputFile=$HOME/jestResults.json
+          cat $HOME/jestResults.json
         continue-on-error: true # for troubleshooting
-      - run: ls /github/workspace/
+      - run: ls $HOME
       - run: pwd
       - run: echo $HOME
 
@@ -77,7 +76,7 @@ jobs:
       - run: ls
       - run: pwd
       - name: Print Jest Test Results
-        run: cat /github/workspace/jestResults.json
+        run: cat $HOME/jestResults.json
 
   sandbox-deploy:
     runs-on: ubuntu-latest
