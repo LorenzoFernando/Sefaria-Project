@@ -60,12 +60,10 @@ jobs:
       - run: ls
       - run: pwd
       - name: Run Jest Tests
-        run: |
-          npm run jest-travis
-        continue-on-error: true # for troubleshooting
-      - run: ls /home/runner
-      - run: pwd
-      - run: echo $HOME
+        run: npm run jest-travis
+        # continue-on-error: true # for troubleshooting
+      - run: cat /home/runner/jestResults.json
+        if: ${{ always() }}
 
   handle-results-jest:
     needs: jest-tests
