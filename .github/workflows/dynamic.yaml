@@ -63,6 +63,7 @@ jobs:
         run: |
           npm run jest-travis
           cat ./jestResults.json
+        continue-on-error: true # for troubleshooting
       - run: ls
       - run: pwd
 
