@@ -5,7 +5,7 @@ from slack_sdk.errors import SlackApiError
 # NB: WE CAN ALSO UPLOAD FILES
 
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
-ghaLink = "https://github.com/{}/runs/{}".format(os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_RUN_ID'])
+ghaLink = "https://github.com/{}/actions/runs/{}".format(os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_RUN_ID'])
 messageText="*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
 
 targetChannel = os.environ['TARGET_SLACK_CHANNEL']
