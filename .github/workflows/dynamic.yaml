@@ -64,6 +64,7 @@ jobs:
 
   handle-results-jest:
     needs: jest-tests
+    if: ${{ always() }}    
     runs-on: ubuntu-latest
     steps:
       - name: Print Jest Test Results
