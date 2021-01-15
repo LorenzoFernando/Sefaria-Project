@@ -61,6 +61,8 @@ jobs:
           npm run build-prod
       - name: Run Jest Tests
         run: npm run jest-travis
+      - name: Print JSON test result
+        run: cat ./jestResults.json
 
   sandbox-deploy:
     runs-on: ubuntu-latest
