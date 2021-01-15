@@ -62,9 +62,9 @@ jobs:
       - name: Run Jest Tests
         run: |
           npm run jest-travis
-          cat ./jestResults.json
+          cat /github/workspace/jestResults.json
         continue-on-error: true # for troubleshooting
-      - run: ls
+      - run: ls /github/workspace/
       - run: pwd
 
   handle-results-jest:
@@ -75,7 +75,7 @@ jobs:
       - run: ls
       - run: pwd
       - name: Print Jest Test Results
-        run: cat ./jestResults.json
+        run: cat /github/workspace/jestResults.json
 
   sandbox-deploy:
     runs-on: ubuntu-latest
