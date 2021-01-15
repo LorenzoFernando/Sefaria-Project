@@ -4,6 +4,64 @@ on:
   - push
 
 jobs:
+
+  starting-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.7
+        uses: actions/setup-python@v1
+        with: 
+          python-version: '3.7'
+      - name: Send Slack Message
+        run: |
+          pip3 install slack-sdk
+          python3 ./build/slack/notifyStart.py
+        env:
+          SLACK_BOT_TOKEN: "${{secrets.CI_SLACK_BOT_TOKEN}}"
+          TARGET_SLACK_CHANNEL: "${{secrets.TARGET_SLACK_CHANNEL}}"
+
+  ending-notification:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs: 
+      - selenium-allsuites-local
+      - selenium-pageloadsuite-local
+      - selenium-pageloadsuite-sauce
+      - selenium-readersuite-local
+      - pytest-cluster
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python 3.7
+        uses: actions/setup-python@v1
+        with: 
+          python-version: '3.7'
+      - name: Send Slack Message
+        run: |
+          pip3 install slack-sdk
+          python3 ./build/slack/notifyEnd.py
+        env:
+          SLACK_BOT_TOKEN: "${{secrets.CI_SLACK_BOT_TOKEN}}"
+          TEST_RESULTS_LINK: "https://sefaria.org"
+          TARGET_SLACK_CHANNEL: "${{secrets.TARGET_SLACK_CHANNEL}}"
+
+  jest-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          npm install
+          npm run build-prod
+      - name: Run Jest Tests
+        run: npm run jest-travis
+
   sandbox-deploy:
     runs-on: ubuntu-latest
 
@@ -372,7 +430,7 @@ jobs:
         run: echo "PYTEST_POD_NAME=$(kubectl get pods --selector=app=web-${{env.GITHUB_SHA_SHORT}} -o json | jq -r '.items[0].metadata.name')" >> $GITHUB_ENV
       
       - name: Run PyTest
-        run: kubectl exec -it ${{env.PYTEST_POD_NAME}} -- pytest -v -m 'not deep and not failing'
+        run: kubectl exec ${{env.PYTEST_POD_NAME}} -- pytest -v -m 'not deep and not failing'
 
   sandbox-cleanup:
     name: "Clean up CI Sandbox"
