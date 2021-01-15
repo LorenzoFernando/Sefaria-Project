@@ -64,8 +64,6 @@ jobs:
       - name: Handle Jest Test Results # later, upload
         run: cat /home/runner/jestResults.json
         if: ${{ always() }}
-
-
       
 
       - name: Authenticate GHA Runner to GCP
@@ -75,8 +73,9 @@ jobs:
           project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
         if: ${{ always() }}
 
-      - name: Define GITHUB_SHA_SHORT
+      - name: Define BUILD_RESULT_SUBDIR
         run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
 
       - name: Upload Build Results
         run: gsutil cp /home/runner/jestResults.json gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/jestResults.json
