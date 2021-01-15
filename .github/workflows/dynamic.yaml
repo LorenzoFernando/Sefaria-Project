@@ -65,6 +65,17 @@ jobs:
         run: cat /home/runner/jestResults.json
         if: ${{ always() }}
 
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/jestResults.json gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/$GITHUB_SHA/jestResults.json
+        if: ${{ always() }}
+
   sandbox-deploy:
     runs-on: ubuntu-latest
     steps:
