@@ -191,7 +191,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests PageloadSuite
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-local.txt
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -200,6 +200,22 @@ jobs:
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           PYTHONPATH: "."
           DJANGO_SETTINGS_MODULE: sefaria.settings
+
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/selenium-pageloadsuite-local.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-pageloadsuite-local.txt
+        if: ${{ always() }}
+
 
   selenium-readersuite-local:
     # Start off with local firefox
@@ -264,7 +280,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests ReaderSuite
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests ReaderSuite | tee /home/runner/selenium-readersuite-local.txt
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -273,6 +289,21 @@ jobs:
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           PYTHONPATH: "."
           DJANGO_SETTINGS_MODULE: sefaria.settings
+
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/selenium-readersuite-local.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-readersuite-local.txt
+        if: ${{ always() }}
 
   selenium-allsuites-local:
     # Start off with local firefox
@@ -337,7 +368,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -346,6 +377,22 @@ jobs:
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           PYTHONPATH: "."
           DJANGO_SETTINGS_MODULE: sefaria.settings
+
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/selenium-allsuites-local.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-allsuites-local.txt
+        if: ${{ always() }}
+
 
   selenium-pageloadsuite-sauce:
     # Start off with local firefox
@@ -406,7 +453,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_tests_on_github.py --tests PageloadSuite
+        run: python3 ./reader/browsertest/run_tests_on_github.py --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-sauce.txt
         env:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
@@ -416,6 +463,22 @@ jobs:
           SEFARIA_TEST_USER: ${{ secrets.SEFARIA_APP_USER }}
           PYTHONPATH: "."
           DJANGO_SETTINGS_MODULE: sefaria.settings
+
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/selenium-pageloadsuite-sauce.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-pageloadsuite-sauce.txt
+        if: ${{ always() }}
+
 
   pytest-cluster:
     name: "Run PyTests on the cluster"
@@ -452,6 +515,22 @@ jobs:
 
       - name: Handle PyTest output
         run: cat /home/runner/pytestResults.txt # later, upload
+        if: ${{ always() }}
+
+      - name: Authenticate GHA Runner to GCP
+        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCS_BUILD_UPLOAD_KEY }}
+          project_id: ${{ secrets.BUILD_UPLOAD_PROJECT }}
+        if: ${{ always() }}
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp /home/runner/pytestResults.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/pytestResults.txt
+        if: ${{ always() }}
 
   sandbox-cleanup:
     name: "Clean up CI Sandbox"
