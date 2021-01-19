@@ -584,7 +584,7 @@ jobs:
 
       - name: Authenticate GHA Runner To Target Cluster
         run: gcloud container clusters get-credentials ${{secrets.DEV_GKE_CLUSTER}} --zone ${{secrets.DEV_GKE_REGION}} --project ${{secrets.DEV_GCP_PROJECT}}
-        
+
       - name: Define GITHUB_SHA_SHORT
         run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA:0:6}" >> $GITHUB_ENV
 
@@ -619,9 +619,15 @@ jobs:
       - name: Authenticate GHA Runner To Target Cluster
         run: gcloud container clusters get-credentials ${{secrets.DEV_GKE_CLUSTER}} --zone ${{secrets.DEV_GKE_REGION}} --project ${{secrets.DEV_GCP_PROJECT}}
 
-      - name: Get Container Name # TODO: UPDATE THIS AFTER ADDING USEFUL
+      - name: Get Pod Name # TODO: UPDATE THIS AFTER ADDING USEFUL
         run: echo "PYTEST_POD_NAME=$(kubectl get pods --selector=ci-pod-test-name=${{env.GITHUB_SHA_SHORT}} -o json | jq -r '.items[0].metadata.name')" >> $GITHUB_ENV
       
+      - name: Wait For Pod To Be Ready
+        run: ./build/ci/waitForPod.bash
+        env: 
+          POD_NAME: ${{env.PYTEST_POD_NAME}}
+          WAIT_DURATION: "900"
+
       - name: Run PyTest
         run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pip3 install pytest-django; pytest -v -m "not deep and not failing"' ./sefaria | tee /home/runner/pytestResultsPod.txt
 
