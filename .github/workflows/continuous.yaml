@@ -596,6 +596,8 @@ jobs:
       - start-test-pod
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
       # Set Up Connection to Dev Mongo
       # 1. Auth to cluster
       # 2. Open encrypted connection
