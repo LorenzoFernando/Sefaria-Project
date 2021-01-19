@@ -568,6 +568,7 @@ jobs:
 
   delete-test-pod:
     name: "Delete Standalone Testing Pod"
+    if: ${{ always() }}
     needs: 
       - pytest-dedicated-pod
       # - djangotests-dedicated-pod
@@ -620,10 +621,6 @@ jobs:
       
       - name: Run PyTest
         run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pip3 install pytest-django; pytest -v -m "not deep and not failing"' ./sefaria | tee /home/runner/pytestResultsPod.txt
-
-      - name: Handle PyTest output
-        run: cat /home/runner/pytestResults.txt # later, upload
-        if: ${{ always() }}
 
       - name: Authenticate GHA Runner to GCP
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
