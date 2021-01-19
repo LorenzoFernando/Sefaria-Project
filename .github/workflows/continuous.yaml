@@ -30,7 +30,7 @@ jobs:
       - selenium-pageloadsuite-local
       - selenium-pageloadsuite-sauce
       - selenium-readersuite-local
-      - pytest-cluster
+      # - pytest-cluster
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -647,7 +647,7 @@ jobs:
       - selenium-pageloadsuite-local
       - selenium-pageloadsuite-sauce
       - selenium-readersuite-local
-      - pytest-cluster
+      #- pytest-cluster
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout
