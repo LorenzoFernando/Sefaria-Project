@@ -584,9 +584,12 @@ jobs:
 
       - name: Authenticate GHA Runner To Target Cluster
         run: gcloud container clusters get-credentials ${{secrets.DEV_GKE_CLUSTER}} --zone ${{secrets.DEV_GKE_REGION}} --project ${{secrets.DEV_GCP_PROJECT}}
+        
+      - name: Define GITHUB_SHA_SHORT
+        run: echo "GITHUB_SHA_SHORT=${GITHUB_SHA:0:6}" >> $GITHUB_ENV
 
       - name: Delete Pod
-        run: kubectl delete pod blahblahblah
+        run: kubectl delete pods --selector=ci-pod-test-name=${{env.GITHUB_SHA_SHORT}}
 
   pytest-dedicated-pod:
     name: "Run PyTest Suite on dedicated pod"
@@ -672,7 +675,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        
+
       - name: Authenticate GHA Runner to GCP
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
