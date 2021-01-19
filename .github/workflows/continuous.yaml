@@ -540,10 +540,9 @@ jobs:
 
   start-test-pod:
     name: "Start Standalone Testing pod"
-    if: ${{ always() }}
     needs: 
       - sandbox-ready
-    runs-on: ubunu-latest
+    runs-on: ubuntu-latest
     steps:
       # Set Up Connection to Dev Mongo
       # 1. Auth to cluster
@@ -567,7 +566,7 @@ jobs:
 
   delete-test-pod:
     name: "Delete Standalone Testing Pod"
-    needs: # all tests that rely on start-test-pod
+    needs: 
       - pytest-dedicated-pod
       # - djangotests-dedicated-pod
     runs-on: ubuntu-latest
