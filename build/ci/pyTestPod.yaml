@@ -21,8 +21,8 @@ spec:
           value: "${DEPLOY_ENV}"
         - name: STACK_COMPONENT
           value: web
-        - name: CI_RUN
-          value: "true"
+        # - name: CI_RUN
+        #   value: "true"
       ports:
         - containerPort: 80
           protocol: TCP
