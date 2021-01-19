@@ -540,6 +540,7 @@ jobs:
 
   start-test-pod:
     name: "Start Standalone Testing pod"
+    if: ${{ always() }}
     needs: 
       - sandbox-ready
     runs-on: ubunu-latest
@@ -587,6 +588,7 @@ jobs:
 
   pytest-dedicated-pod:
     name: "Run PyTest Suite on dedicated pod"
+    if: ${{ always() }}
     needs:
       - start-test-pod
     runs-on: ubuntu-latest
