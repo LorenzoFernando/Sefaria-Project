@@ -21,6 +21,8 @@ for result in resultList:
 if "NIGHTLY" not in os.environ or os.environ["NIGHTLY"] == "false":
     messageText="*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
     messageText += "\n" + resultLinks
+    messageText += "\n" + baseResultUrl + "/" + "report.html"
+
 else:
     messageText="_*NIGHTLY TEST*_\n*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
     messageText += "\n" + resultLinks
