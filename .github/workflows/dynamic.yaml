@@ -4,6 +4,12 @@ on:
   - push
 
 jobs:
+  envsubst-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if envsubst is available
+        run: envsubst -v
+
   starting-notification:
     runs-on: ubuntu-latest
     steps:
