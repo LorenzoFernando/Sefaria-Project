@@ -9,24 +9,17 @@ from slack_sdk.errors import SlackApiError
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 ghaLink = "https://github.com/{}/actions/runs/{}".format(os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_RUN_ID'])
 
-resultList = os.environ["RESULT_LIST"].split(",")
-
-resultLinks = "*Test Results*\n"
 baseResultUrl = os.environ["TEST_RESULTS_LINK"]
-
-for result in resultList:
-    resultLinks += baseResultUrl + "/" + result + "\n"
+resultLinks = "*Test Results*: " + baseResultUrl + "/" + "report.html"
 
 
 if "NIGHTLY" not in os.environ or os.environ["NIGHTLY"] == "false":
     messageText="*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
     messageText += "\n" + resultLinks
-    messageText += "\n" + baseResultUrl + "/" + "report.html"
 
 else:
     messageText="_*NIGHTLY TEST*_\n*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
     messageText += "\n" + resultLinks
-    messageText += "\n" + baseResultUrl + "/" + "report.html"
 
 targetChannel = os.environ['TARGET_SLACK_CHANNEL']
 

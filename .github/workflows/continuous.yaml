@@ -53,7 +53,6 @@ jobs:
           SLACK_BOT_TOKEN: "${{secrets.CI_SLACK_BOT_TOKEN}}"
           TEST_RESULTS_LINK: "https://buildresults.sefaria.org/${{env.BUILD_RESULT_SUBDIR}}"
           TARGET_SLACK_CHANNEL: "${{secrets.TARGET_SLACK_CHANNEL}}"
-          RESULT_LIST: "selenium-pageloadsuite-local.txt,selenium-readersuite-local.txt,selenium-allsuites-local.txt,selenium-pageloadsuite-sauce.txt,pytestResults.txt,pytestResultsPod.txt,jestResults.json"
 
   jest-tests:
     runs-on: ubuntu-latest
