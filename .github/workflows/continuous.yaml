@@ -619,7 +619,7 @@ jobs:
       - name: Authenticate GHA Runner To Target Cluster
         run: gcloud container clusters get-credentials ${{secrets.DEV_GKE_CLUSTER}} --zone ${{secrets.DEV_GKE_REGION}} --project ${{secrets.DEV_GCP_PROJECT}}
 
-      - name: Get Pod Name # TODO: UPDATE THIS AFTER ADDING USEFUL
+      - name: Get Pod Name
         run: echo "PYTEST_POD_NAME=$(kubectl get pods --selector=ci-pod-test-name=${{env.GITHUB_SHA_SHORT}} -o json | jq -r '.items[0].metadata.name')" >> $GITHUB_ENV
       
       - name: Wait For Pod To Be Ready
