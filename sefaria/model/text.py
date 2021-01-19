@@ -1036,7 +1036,7 @@ class AbstractTextRecord(object):
         return False
 
     @staticmethod
-    def _strip_itags(s):
+    def _strip_itags(s, sections=None):
         soup = BeautifulSoup("<root>{}</root>".format(s), 'lxml')
         itag_list = soup.find_all(AbstractTextRecord._find_itags)
         for itag in itag_list:
@@ -1059,7 +1059,7 @@ class AbstractTextRecord(object):
             for func in text_modification_funcs:
                 string = func(string, sections)
             return string
-        start_sections = [s-1 for s in start_sections]  # zero-indexed for ja
+        start_sections = None if start_sections is None else [s-1 for s in start_sections]  # zero-indexed for ja
         return self.ja().modify_by_function(modifier, start_sections)
 
     # Currently assumes that text is JA
@@ -4581,7 +4581,7 @@ class Library(object):
             if not rebuild:
                 self._toc_json = scache.get_shared_cache_elem('toc_json')
             if rebuild or not self._toc_json:
-                self._toc_json = json.dumps(self.get_toc())
+                self._toc_json = json.dumps(self.get_toc(), ensure_ascii=False)
                 scache.set_shared_cache_elem('toc_json', self._toc_json)
                 self.set_last_cached_time()
         return self._toc_json
@@ -4614,7 +4614,7 @@ class Library(object):
             if not rebuild:
                 self._topic_toc_json = scache.get_shared_cache_elem('topic_toc_json')
             if rebuild or not self._topic_toc_json:
-                self._topic_toc_json = json.dumps(self.get_topic_toc())
+                self._topic_toc_json = json.dumps(self.get_topic_toc(), ensure_ascii=False)
                 scache.set_shared_cache_elem('topic_toc_json', self._topic_toc_json)
                 self.set_last_cached_time()
         return self._topic_toc_json
@@ -4672,8 +4672,8 @@ class Library(object):
             }
         return self._topic_data_sources.get(data_source, None)
 
-    def get_groups_in_library(self):
-        return self._toc_tree.get_groups_in_library()
+    def get_collections_in_library(self):
+        return self._toc_tree.get_collections_in_library()
 
     def get_search_filter_toc(self, rebuild=False):
         """
@@ -4698,7 +4698,7 @@ class Library(object):
             if not rebuild:
                 self._search_filter_toc_json = scache.get_shared_cache_elem('search_filter_toc_json')
             if rebuild or not self._search_filter_toc_json:
-                self._search_filter_toc_json = json.dumps(self.get_search_filter_toc())
+                self._search_filter_toc_json = json.dumps(self.get_search_filter_toc(), ensure_ascii=False)
                 scache.set_shared_cache_elem('search_filter_toc_json', self._search_filter_toc_json)
                 self.set_last_cached_time()
         return self._search_filter_toc_json
@@ -4706,7 +4706,7 @@ class Library(object):
     def build_full_auto_completer(self):
         from .autospell import AutoCompleter
         self._full_auto_completer = {
-            lang: AutoCompleter(lang, library, include_people=True, include_topics=True, include_categories=True, include_parasha=False, include_users=True, include_groups=True) for lang in self.langs
+            lang: AutoCompleter(lang, library, include_people=True, include_topics=True, include_categories=True, include_parasha=False, include_users=True, include_collections=True) for lang in self.langs
         }
 
         for lang in self.langs:
@@ -5033,7 +5033,7 @@ class Library(object):
             if not rebuild:
                 self._simple_term_mapping_json = scache.get_shared_cache_elem('term_mapping_json')
             if rebuild or not self._simple_term_mapping_json:
-                self._simple_term_mapping_json = json.dumps(self.get_simple_term_mapping())
+                self._simple_term_mapping_json = json.dumps(self.get_simple_term_mapping(), ensure_ascii=False)
                 scache.set_shared_cache_elem('term_mapping_json', self._simple_term_mapping_json)
                 self.set_last_cached_time()
         return self._simple_term_mapping_json
@@ -5127,7 +5127,7 @@ class Library(object):
                 self._full_title_list_jsons[lang] = scache.get_shared_cache_elem('books_'+lang+'_json')
             if rebuild or not self._full_title_list_jsons.get(lang):
                 title_list = self.build_text_titles_json(lang=lang)
-                title_list_json = json.dumps(title_list)
+                title_list_json = json.dumps(title_list, ensure_ascii=False)
                 self._full_title_list_jsons[lang] = title_list_json
                 scache.set_shared_cache_elem('books_' + lang, title_list)
                 scache.set_shared_cache_elem('books_'+lang+'_json', title_list_json)
