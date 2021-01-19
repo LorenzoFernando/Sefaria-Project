@@ -2,6 +2,8 @@
 apiVersion: v1
 kind: Pod
 metadata:
+  labels:
+    ci-pod-test-name: ${DEPLOY_ENV}
   name: ${DEPLOY_ENV}-pytest-sandbox-${TIMESTAMP}
 spec:
   restartPolicy: Never
