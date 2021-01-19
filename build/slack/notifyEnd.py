@@ -4,9 +4,26 @@ from slack_sdk.errors import SlackApiError
 
 # NB: WE CAN ALSO UPLOAD FILES
 
+# TODO 1: Take a comma-seperated list at RESULT_LIST and add a list of URLs to the completion report
+
 client = WebClient(token=os.environ['SLACK_BOT_TOKEN'])
 ghaLink = "https://github.com/{}/actions/runs/{}".format(os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_RUN_ID'])
-messageText="*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
+
+resultList = os.environ["RESULT_LIST"].split(",")
+
+resultLinks = "*Test Results*\n"
+baseResultUrl = os.environ["TEST_RESULTS_LINK"]
+
+for result in resultList:
+    resultLinks += baseResultUrl + "/" + result + "\n"
+
+
+if "NIGHTLY" not in os.environ or os.environ["NIGHTLY"] == "false":
+    messageText="*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
+    messageText += "\n" + resultLinks
+else:
+    messageText="_*NIGHTLY TEST*_\n*Commit:* {}\n*User:* {}\n*Results:* {}\n*GitHub Action Link:* {}".format(os.environ['GITHUB_SHA'],os.environ['GITHUB_ACTOR'],os.environ['TEST_RESULTS_LINK'], ghaLink)
+    messageText += "\n" + resultLinks
 
 targetChannel = os.environ['TARGET_SLACK_CHANNEL']
 

@@ -1,5 +1,5 @@
 ---
-name: Tests
+name: Continuous Tests
 on:
   - push
 
@@ -39,14 +39,21 @@ jobs:
         uses: actions/setup-python@v1
         with: 
           python-version: '3.7'
+
+      - name: Define BUILD_RESULT_SUBDIR
+        run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
+        if: ${{ always() }}
+
       - name: Send Slack Message
         run: |
           pip3 install slack-sdk
           python3 ./build/slack/notifyEnd.py
         env:
+          # I might have to list the available result files until I build a proper frontend
           SLACK_BOT_TOKEN: "${{secrets.CI_SLACK_BOT_TOKEN}}"
-          TEST_RESULTS_LINK: "https://sefaria.org"
+          TEST_RESULTS_LINK: "https://buildresults.sefaria.org/${{env.BUILD_RESULT_SUBDIR}}"
           TARGET_SLACK_CHANNEL: "${{secrets.TARGET_SLACK_CHANNEL}}"
+          RESULT_LIST: "selenium-pageloadsuite-local.txt,selenium-readersuite-local.txt,selenium-allsuites-local.txt,selenium-pageloadsuite-sauce.txt,pytestResults.txt,jestResults.json"
 
   jest-tests:
     runs-on: ubuntu-latest
@@ -126,7 +133,6 @@ jobs:
         run: ./build/ci/waitForSandbox.bash
         env:
           WAIT_DURATION: "3000"
-
 
   selenium-pageloadsuite-local:
     # Start off with local firefox
@@ -215,7 +221,6 @@ jobs:
       - name: Upload Build Results
         run: gsutil cp /home/runner/selenium-pageloadsuite-local.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-pageloadsuite-local.txt
         if: ${{ always() }}
-
 
   selenium-readersuite-local:
     # Start off with local firefox
@@ -368,7 +373,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local.txt
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -393,9 +398,7 @@ jobs:
         run: gsutil cp /home/runner/selenium-allsuites-local.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-allsuites-local.txt
         if: ${{ always() }}
 
-
   selenium-pageloadsuite-sauce:
-    # Start off with local firefox
     name: "Selenium: PageLoad Suite on Sauce Labs Firefox"
     needs: sandbox-ready
     runs-on: ubuntu-latest
@@ -478,7 +481,6 @@ jobs:
       - name: Upload Build Results
         run: gsutil cp /home/runner/selenium-pageloadsuite-sauce.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-pageloadsuite-sauce.txt
         if: ${{ always() }}
-
 
   pytest-cluster:
     name: "Run PyTests on the cluster"
