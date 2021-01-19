@@ -619,7 +619,7 @@ jobs:
         run: echo "PYTEST_POD_NAME=$(kubectl get pods --selector=ci-pod-test-name=${{env.GITHUB_SHA_SHORT}} -o json | jq -r '.items[0].metadata.name')" >> $GITHUB_ENV
       
       - name: Run PyTest
-        run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pytest -v -m "not deep and not failing"' ./sefaria | tee /home/runner/pytestResultsPod.txt
+        run: kubectl exec ${{env.PYTEST_POD_NAME}} -- bash -c 'CI_RUN=true; pip3 install pytest-django; pytest -v -m "not deep and not failing"' ./sefaria | tee /home/runner/pytestResultsPod.txt
 
       - name: Handle PyTest output
         run: cat /home/runner/pytestResults.txt # later, upload
