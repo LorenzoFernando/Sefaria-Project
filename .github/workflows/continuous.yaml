@@ -567,7 +567,6 @@ jobs:
   delete-test-pod:
     name: "Delete Standalone Testing Pod"
     needs: # all tests that rely on start-test-pod
-      - start-test-pod
       - pytest-dedicated-pod
       # - djangotests-dedicated-pod
     runs-on: ubuntu-latest
