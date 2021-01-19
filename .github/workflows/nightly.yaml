@@ -242,8 +242,4 @@ jobs:
         run: gsutil cp /home/runner/selenium-sauce-all.txt gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/selenium-sauce-all.txt
         if: ${{ always() }}
 
-  django-tests-full: {}
-
-  pytest-full: {}
-
 ...

@@ -588,7 +588,6 @@ jobs:
 
   pytest-dedicated-pod:
     name: "Run PyTest Suite on dedicated pod"
-    if: ${{ always() }}
     needs:
       - start-test-pod
     runs-on: ubuntu-latest
