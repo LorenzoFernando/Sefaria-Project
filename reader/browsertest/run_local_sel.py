@@ -27,16 +27,15 @@ if __name__ == '__main__':
     t = Trial(platform="localselenium", caps=caps, tests=tests, parallel=options.parallel, verbose=True)
     t.run()
     print("Done running the Trials")
-    results = t.results()
-    print("Starting to print the report")
+    # print("Starting to print the report")
+    # print("Done printing the report")
 
-    
-    print("Done printing the report")
+    results = t.results()
+
     fails = results.number_failed()
-    if fails > 0:
-        sys.stderr.write(str(results))
-        sys.stderr.flush()
-    print("Done reporting failures")
+    # if fails > 0:
+    #     sys.stderr.write(str(results))
+    #     sys.stderr.flush()
     print(results.report())
 
     sys.exit(fails)
