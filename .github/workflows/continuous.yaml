@@ -200,7 +200,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-local.txt ; echo $?
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-local.txt #  ; echo $?
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -288,7 +288,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests ReaderSuite | tee /home/runner/selenium-readersuite-local.txt ; echo $?
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests ReaderSuite | tee /home/runner/selenium-readersuite-local.txt #  ; echo $?
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -376,7 +376,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local.txt ; echo $?
+        run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local.txt #  ; echo $?
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -459,7 +459,7 @@ jobs:
         run: pip3 install -r ./requirements.txt
 
       - name: Run PageLoad Suite
-        run: python3 ./reader/browsertest/run_tests_on_github.py --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-sauce.txt ; echo $?
+        run: python3 ./reader/browsertest/run_tests_on_github.py --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-sauce.txt #  ; echo $?
         env:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
