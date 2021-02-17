@@ -1382,7 +1382,8 @@ class AtomicTest(AbstractTest):
             self.driver.execute_script('"**** Enter {} ****"'.format(self.name()))
             self.body()
             self.driver.execute_script('"**** Exit {} ****"'.format(self.name()))
-        except Exception:
+        except Exception as e:
+            print(e)
             err = traceback.format_exc()
             result = SingleTestResult(self.__class__, self.cap, False, err)
         else:
@@ -1779,7 +1780,7 @@ class Trial(object):
         except Exception as e:
             # Test errors are caught before this.
             # An exception at this level means that the infrastructure erred.
-
+            print(e)
             msg = traceback.format_exc()
             if self.isVerbose:
                 self.carp("{} / {} - Aborted\n{}\n".format(test_class.__name__, Trial.cap_to_string(cap), msg))
