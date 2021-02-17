@@ -30,12 +30,13 @@ if __name__ == '__main__':
     results = t.results()
     print("Starting to print the report")
 
-    print(results.report())
+    
     print("Done printing the report")
     fails = results.number_failed()
     if fails > 0:
         sys.stderr.write(str(results))
         sys.stderr.flush()
     print("Done reporting failures")
+    print(results.report())
 
     sys.exit(fails)
