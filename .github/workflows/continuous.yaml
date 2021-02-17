@@ -144,7 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     services: 
       selenium:
-        image: selenium/standalone-firefox:3.141.59
+        image: selenium/standalone-firefox:3.141.59-zirconium
         ports: [ "4444:4444" ]
         volumes: ["/dev/shm:/dev/shm"]
     steps:
@@ -232,7 +232,7 @@ jobs:
     runs-on: ubuntu-latest
     services: 
       selenium:
-        image: selenium/standalone-firefox:3.141.59
+        image: selenium/standalone-firefox:3.141.59-zirconium
         ports: [ "4444:4444" ]
         volumes: ["/dev/shm:/dev/shm"]
     steps:
@@ -320,7 +320,7 @@ jobs:
     runs-on: ubuntu-latest
     services: 
       selenium:
-        image: selenium/standalone-firefox:3.141.59
+        image: selenium/standalone-firefox:3.141.59-zirconium
         ports: [ "4444:4444" ]
         volumes: ["/dev/shm:/dev/shm"]
     steps:
