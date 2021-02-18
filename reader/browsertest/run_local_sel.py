@@ -31,11 +31,9 @@ if __name__ == '__main__':
     # print("Done printing the report")
 
     results = t.results()
-
     fails = results.number_failed()
     # if fails > 0:
     #     sys.stderr.write(str(results))
     #     sys.stderr.flush()
     print(results.report())
-
     sys.exit(fails)

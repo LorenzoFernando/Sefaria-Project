@@ -29,14 +29,11 @@ if __name__ == '__main__':
 
     t = Trial(platform="githubnew", build=build, parallel=options.parallel, tests=tests, verbose=True)
     t.run()
+    print("Done running the Trials")
     results = t.results()
-
-    print(results.report())
     fails = results.number_failed()
-    if fails > 0:
-        sys.stderr.write(str(results))
-        sys.stderr.flush()
+    # if fails > 0:
+    #     sys.stderr.write(str(results))
+    #     sys.stderr.flush()
+    print(results.report())
     sys.exit(fails)
-
-
-# Updates required to adapt run_tests_on_travis into run_tests_on_github
