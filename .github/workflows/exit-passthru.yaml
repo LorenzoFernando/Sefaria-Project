@@ -1,0 +1,32 @@
+---
+name: passthrough
+on: 
+  - push
+
+jobs:
+  passthrough1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test1
+        run: echo "blah blah" && exit 1 | tee "asdfa" 
+        shell: bash
+
+  passthrough2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test1
+        run: echo "blah blah" && exit 1 | tee "asdfa" && echo $?
+        shell: bash
+
+
+  passthrough3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test1
+        run: echo "blah blah" && exit 1 | tee "asdfa" 
+
+  passthrough4:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test1
+        run: echo "blah blah" && exit 1 | tee "asdfa" && echo $?

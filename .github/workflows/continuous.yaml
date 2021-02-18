@@ -201,6 +201,7 @@ jobs:
 
       - name: Run PageLoad Suite
         run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-local.txt #  ; echo $?
+        shell: bash
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -289,6 +290,7 @@ jobs:
 
       - name: Run PageLoad Suite
         run: python3 ./reader/browsertest/run_local_sel.py --parallel --tests ReaderSuite | tee /home/runner/selenium-readersuite-local.txt #  ; echo $?
+        shell: bash
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -377,6 +379,7 @@ jobs:
 
       - name: Run PageLoad Suite
         run: python3 ./reader/browsertest/run_local_sel.py --parallel | tee /home/runner/selenium-allsuites-local.txt #  ; echo $?
+        shell: bash
         env:
           CI_RUN: "true"
           CI_URL: https://${{env.GITHUB_SHA_SHORT}}.cauldron.sefaria.org
@@ -405,9 +408,7 @@ jobs:
     name: "Selenium: PageLoad Suite on Sauce Labs Firefox"
     needs: sandbox-ready
     runs-on: ubuntu-latest
-
     steps:
-
       # BEGIN SETUP
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -460,6 +461,7 @@ jobs:
 
       - name: Run PageLoad Suite
         run: python3 ./reader/browsertest/run_tests_on_github.py --tests PageloadSuite | tee /home/runner/selenium-pageloadsuite-sauce.txt #  ; echo $?
+        shell: bash
         env:
           SAUCE_USERNAME: ${{ secrets.SAUCE_USERNAME }}
           SAUCE_ACCESS_KEY: ${{ secrets.SAUCE_ACCESS_KEY }}
