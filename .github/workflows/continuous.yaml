@@ -590,6 +590,7 @@ jobs:
       - name: Populate report.html template
         if: ${{ always() }}
         run: envsubst '${REPO_NAME},${USER_NAME},${COMMIT_SHA}' < ./build/ci/report.html.tmpl > ./build/ci/report-hydrated.html
+        shell: bash
 
       - name: Upload Build Results
         run: gsutil cp ./build/ci/report.html gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/report.html
