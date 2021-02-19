@@ -587,7 +587,15 @@ jobs:
         run: echo "BUILD_RESULT_SUBDIR=${GITHUB_SHA:0:8}" >> $GITHUB_ENV
         if: ${{ always() }}
 
+      - name: Populate report.html template
+        if: ${{ always() }}
+        run: envsubst '${REPO_NAME},${USER_NAME},${COMMIT_SHA}' < ./build/ci/report.html.tmpl > ./build/ci/report-hydrated.html
+
       - name: Upload Build Results
         run: gsutil cp ./build/ci/report.html gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/report.html
+        if: ${{ always() }}
+
+      - name: Upload Build Results
+        run: gsutil cp ./build/ci/report-hydrated.html gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/report-hydrated.html
         if: ${{ always() }}
 ...
