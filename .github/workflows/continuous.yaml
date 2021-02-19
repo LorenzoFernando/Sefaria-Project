@@ -589,21 +589,10 @@ jobs:
 
       - name: Populate report.html template
         if: ${{ always() }}
-        run: envsubst '${REPO_NAME},${USER_NAME},${COMMIT_SHA},${GITHUB_REPOSITORY},${GITHUB_SHA}' < ./build/ci/report.html.tmpl > ./build/ci/report-hydrated.html
+        run: envsubst '${GITHUB_REPOSITORY},${GITHUB_SHA}' < ./build/ci/report.html.tmpl > ./build/ci/report.html
         shell: bash
-        # env:
-        #   REPO_NAME: ${{  }}
-        #   USER_NAME: ${{  }}
-        #   COMMIT_SHA: ${{  }}
-        # <img alt="GitHub commit checks state" src="https://img.shields.io/github/checks-status/${GITHUB_REPOSITORY}/${GITHUB_SHA}">
-        # 
-
 
       - name: Upload Build Results
         run: gsutil cp ./build/ci/report.html gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/report.html
-        if: ${{ always() }}
-
-      - name: Upload Build Results
-        run: gsutil cp ./build/ci/report-hydrated.html gs://${{secrets.GCS_BUILD_UPLOAD_BUCKET}}/${{env.BUILD_RESULT_SUBDIR}}/report-hydrated.html
         if: ${{ always() }}
 ...
